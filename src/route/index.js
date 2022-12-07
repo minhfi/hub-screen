@@ -1,34 +1,40 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Route,
   Switch,
+  Redirect,
   useLocation
 } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
-import { DesktopRoutes, MobileRoutes } from './RoutesConfig'
+import { getToken } from '@/util/localStorage'
+import { routes } from './RoutesConfig'
 import Layout from '@/layout'
 
 export const AppRoute = () => {
+  const token = getToken()
   const location = useLocation()
-  const routesDefault = window.innerWidth <= 1024 ? MobileRoutes : DesktopRoutes
-  const [routes, setRoutes] = useState(routesDefault)
+  const history = createBrowserHistory()
 
   const blackList = ['/']
   const active = blackList.includes(location.pathname) ? null : location.pathname
+  const currentURL = history.location.pathname
 
-  useEffect(() => {
-    window.addEventListener('resize', function(event) {
-      if (window.innerWidth <= 1024) {
-        return setRoutes(MobileRoutes)
-      }
+  const redirectRoute = () => {
+    const route = routes.find((r) => currentURL.includes(r.name))
 
-      return setRoutes(DesktopRoutes)
-    })
-
-    return () => {
-      window.removeEventListener('resize')
+    if (route?.view === 'isPublic' && token) {
+      return <Redirect to="/home" />
     }
-  }, [])
+
+    if (route?.view === 'isPrivate' && !token) {
+      return <Redirect to="/login" />
+    }
+
+    if (currentURL === '/') {
+      return <Redirect to={token ? '/home' : '/login'} />
+    }
+  }
 
   return (
     <Layout>
@@ -47,6 +53,7 @@ export const AppRoute = () => {
                 component={r.component}
               />
             ))}
+            {redirectRoute()}
           </Switch>
         </CSSTransition>
       </SwitchTransition>
