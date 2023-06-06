@@ -1,92 +1,288 @@
-# reactjs-fe
+## Table of contents
+* [General info](#general-info)
+* [Features](#features)
+* [Requirements](#requirements)
+* [Getting Started](#getting-started)
+* [Creating A Component](#creating-a-component)
+* [Build Setup](#build-setup)
+* [Installed](#installed)
+* [Work Space Structure](#work-space-structure)
+* [Recommended Reads](#recommended-reads)
 
 
+## General info
+# Skeleton's react website
 
-## Getting started
+<a href="https://neyu.co/index.html"><img src="https://img.shields.io/badge/-Contact-%23555.svg?logo=neyu-sponsors" height="20"></a>
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- The web's most popular front-end template for building web applications with
+[React](https://reactjs.org/) in version 16.13.0(popular).
+- State management with [Redux](https://github.com/reactjs/react-redux) in version 4.0.5.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-## Add your files
+## Features
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- The right structure for the project to conduct restructuring will help improve work productivity.
+- Pre-configured with code quality tools: ESLint, Prettier, JavaScript, Webpack, Redux, etc.
+- Pre-configured with VSCode code snippets and other VSCode settings
+- The ongoing design and development are supported by these outstanding companies:
 
+<a href="https://reactstarter.com/s/1"><img src="https://reactstarter.com/s/1.png" height="60" /></a>&nbsp;&nbsp;<a href="https://reactstarter.com/s/2"><img src="https://reactstarter.com/s/2.png" height="60" /></a>&nbsp;&nbsp;<a href="https://reactstarter.com/s/3"><img src="https://reactstarter.com/s/3.png" height="60" /></a>
+
+
+## Requirements
+
+- [Node.js](https://nodejs.org/) v18+ with [Corepack](https://nodejs.org/api/corepack.html) (`$ corepack enable`)
+- [VS Code](https://code.visualstudio.com/) editor with [recommended extensions](.vscode/extensions.json)
+- Optionally [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+  and [Reactime](https://chrome.google.com/webstore/detail/reactime/cgibknllccemdnfhfpmjhffpjfeidjga?hl=en) browser extensions
+
+
+## Getting Started
+[(dotenv)](https://www.npmjs.com/package/dotenv)
+
+Copy [.env.example] to `.env`
+
+``` bash
+cp .env.example .env
+npm install
+npm start
 ```
-cd existing_repo
-git remote add origin https://gitlab.salespikes.global/tms-repo/skeleton/reactjs-fe.git
-git branch -M main
-git push -uf origin main
+The app will become available at [http://localhost:3100/](http://localhost:3100/).
+
+
+## Creating A Component
+
+We're going to write a `Welcome` component.
+The component will take the name of whoever we want to greet (which we'll call `name`), and optionally, the number of exclamation marks to trail with (`enthusiasmLevel`).
+
+When we write something like `<Welcome name="Michael" enthusiasmLevel={3} />`, the component should render to something like `<div>Hello Michael!!!</div>`.
+If `enthusiasmLevel` isn't specified, the component should default to showing one exclamation mark.
+If `enthusiasmLevel` is `0` or negative, it should throw an error.
+
+We'll write a `Welcome.js`:
+
+```js
+// src/components/Hello.js
+
+import * as React from 'react';
+
+function Welcome({ name, enthusiasmLevel = 1 }) {
+  if (enthusiasmLevel <= 0) {
+    throw new Error('You could be a little more enthusiastic. :D');
+  }
+
+  return (
+    <div className="welcome">
+      <div className="greeting">
+        Hello {name + getExclamationMarks(enthusiasmLevel)}
+      </div>
+    </div>
+  );
+}
+
+export default Welcome;
+
+// helpers
+
+function getExclamationMarks(numChars) {
+  return Array(numChars + 1).join('!');
+}
 ```
 
-## Integrate with your tools
+We also wrote `Welcome` as a stateless function component (an SFC).
+To be specific, `Welcome` is a function that takes a `Props` object, and picks apart (or "destructure") all the properties that it will be passed.
+If `enthusiasmLevel` isn't given in our `Props` object, it will default to `1`.
 
-- [ ] [Set up project integrations](https://gitlab.salespikes.global/tms-repo/skeleton/reactjs-fe/-/settings/integrations)
+Writing functions is one of two primary [ways React allows us to make components]((https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components)).
+If we wanted, we *could* have written it out as a class as follows:
 
-## Collaborate with your team
+```js
+class Welcome extends React.Component {
+  render() {
+    const { name, enthusiasmLevel = 1 } = this.props;
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+    if (enthusiasmLevel <= 0) {
+      throw new Error('You could be a little more enthusiastic. :D');
+    }
 
-## Test and Deploy
+    return (
+      <div className="hello">
+        <div className="greeting">
+          Hello {name + getExclamationMarks(enthusiasmLevel)}
+        </div>
+      </div>
+    );
+  }
+}
+```
 
-Use the built-in continuous integration in GitLab.
+Classes are useful [when our component instances have some state or need to handle lifecycle hooks](https://facebook.github.io/react/docs/state-and-lifecycle.html).
+But we don't really need to think about state in this specific example - in fact, we specified it as `object` in `React.Component`, so writing an SFC makes more sense here, but it's important to know how to write a class component.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Notice that the class extends `React.Component`.
+The JavaScript-specific bit here are the type arguments we're passing to `React.Component`.
+We'll return to component state in a bit.
 
-***
+Now that we've written our component, let's dive into `index.js` and replace our render of `<App />` with a render of `<Hello ... />`.
 
-# Editing this README
+First we'll import it at the top of the file:
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```js
+import Welcome from './components/Welcome';
+```
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+and then change up our `render` call:
 
-## Name
-Choose a self-explaining name for your project.
+```js
+ReactDOM.render(
+  <Welcome name="JavaScript" enthusiasmLevel={10} />,
+  document.getElementById('root') as HTMLElement
+);
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Build Setup
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+``` bash
+# install dependencies
+npm install
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+# serve with hot reload at localhost:<port> | config .env REACT_APP_PORT default 3000
+npm run start
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+# start development with docker | replace .env.REACT_APP_PROXY localhost to host.docker.internal
+npm run docker:start
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+# build for production with minification
+npm run build
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+# run linter
+npm run eslint
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+# run tests
+npm run test
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## Installed
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+|     Plugin          |     Document  |
+|     ------------    |     -----------         |
+| Package manager | [npm](https://www.npmjs.com/) |
+| Hook installer for git | [pre-commit](https://github.com/observing/pre-commit) |
+| Module bundler | [webpack-v4](https://v4.webpack.js.org/api) |
+| Javascript compiler | [babel](https://babeljs.io/) |
+| CSS preprocessor | [sass](https://sass-lang.com) |
+| Linter tool | [eslint](https://eslint.org/) |
+| Javascript testing | [jest](https://github.com/facebook/jest) |
+| Managing environment variables | [dotenv](https://github.com/motdotla/dotenv) |
+| Promise based HTTP client | [axios](https://github.com/axios/axios) |
+| Value parsing and validation | [yup](https://www.npmjs.com/package/yup) |
 
-## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Work Space Structure
+
+``` bash
+# ├── README.md            # Documents
+├── .env                  # environment variables
+├── .babelrc              # babel config
+├── .eslintrc             # eslint config
+├── .eslintignore         # eslint config
+├── ecosystem.config.js   # ecosystem config
+├── index.js              # index scripts
+├── jsconfig.json         # to enable editor IntelliSense
+├── package-lock.json     # project metadata
+├── package.json          # project metadata
+├── test.js               # test scripts
+├── public
+|  ├── favicon.ico        # app icon
+|  ├── index.html         # the template file of the app
+|  ├── manifest.json      # the file that describes the app
+|  └── static             # static content (.png, .jpg, .pdf, ...etc)
+|     ├── fonts
+|     ├── icons
+|     └── ...
+├── build   # build output folder
+|  ├── favicon.ico
+|  ├── index.html
+|  ├── manifest.json
+|  ├── service-worker.js
+|  └── ...
+├── config  # source configuration (env, polyfill, ...etc)
+|  ├── env.js
+|  ├── es5.js
+|  ├── paths.js
+|  ├── polyfills.js
+|  └── jest
+|     ├── babelTransform.js
+|     ├── cssTransform.js
+|     └── fileTransform.js
+├── webpack # webpack scripts configuration
+|  ├── webpack.common.js
+|  ├── webpack.dev.js
+|  └── webpack.prod.js
+└── src
+   ├── App.js                   # app component
+   ├── index.js                 # app main
+   ├── registerServiceWorker.js # where install service worker
+   ├── setupTests.js            # setup jest test env
+   ├── apis       # where define API actions
+   |  ├── core.js       # define API actions example
+   ├── components # atom component, stateless component
+   |  ├── loading       # Example: loading component
+   |  |  ├── index.js   # component script
+   |  |  └── style.scss # component style
+   |  └── ...
+   ├── constants  # constant variables
+   ├── hooks      # custom hooks
+   ├── i18n       # i18n configuration
+   ├── layout     # layout component
+   |     ├── index.js   # component script
+   |     └── style.scss # component style
+   ├── route  # react-router configuration
+   ├── store  # redux configuration
+   |  ├── index.js
+   |  ├── actions
+   |  ├── reducers
+   |  └── selectors
+   ├── style  # app style configuration
+   |  ├── _animation.scss
+   |  ├── _autoload.scss
+   |  ├── _color.scss
+   |  ├── _font.scss
+   |  ├── _helper.scss
+   |  ├── _mixin.scss
+   |  ├── _reset.scss
+   |  ├── _size.scss
+   |  ├── _typography.scss
+   |  └── index.js
+   |── util   # utility, helpers, custom, loader, ...
+   |  ├── firebase.js
+   |  ├── helpers.js
+   |  └── reCAPTCHA.js
+   └── view   # view component
+      ├── Home     # Home page
+      ├── NotFound # Not Found page
+      └── index.js # component script
+```
+
+
+## Recommended Reads
+
+### ES6
+
+- [http://es6-features.org](http://es6-features.org)
+
+### React
+
+- [https://reactjs.org/docs](https://reactjs.org/docs)
+- [https://reactjs.org/docs/strict-mode.html](https://reactjs.org/docs/strict-mode.html)
+- [https://reactjs.org/docs/hooks-rules.html](https://reactjs.org/docs/hooks-rules.html)
+- [https://reactjs.org/docs/thinking-in-react.html](https://reactjs.org/docs/thinking-in-react.html)
+
+### Style guide
+
+- [https://google.github.io/styleguide/jsguide.html](https://google.github.io/styleguide/jsguide.html)
+- [https://google.github.io/styleguide/jsguide.html#naming](https://google.github.io/styleguide/jsguide.html#naming)
+- [https://google.github.io/styleguide/jsguide.html#jsdoc](https://google.github.io/styleguide/jsguide.html#jsdoc)

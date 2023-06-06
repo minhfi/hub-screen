@@ -1,0 +1,83 @@
+
+body {
+  color: $NeutralWhite;
+  scroll-behavior: smooth;
+  overflow: hidden;
+  background-color: $darkColor;
+}
+
+#root {
+  scroll-behavior: smooth;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.container {
+  max-width: $screenXXXLarge;
+  margin: 0 auto;
+  padding: 0 !important;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.not-allow,
+.not-allowed {
+  cursor: not-allowed;
+}
+
+.oneline-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.my-container {
+  position: relative;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include mediaQueryMax($screenSmall) {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  @include mediaQuery($screenSmall, $screenMedium) {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  @include mediaQuery($screenMedium, $screenLarge) {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  @include mediaQuery($screenLarge, $screenXLarge) {
+    padding-right: 48px;
+    padding-left: 48px;
+  }
+
+  @include mediaQuery($screenXLarge, $screenXXLarge) {
+    padding-right: 64px;
+    padding-left: 64px;
+  }
+
+  @include mediaQueryMin($screenXXLarge) {
+    width: 1472px; //$screenXXLarge - 64px * 2
+    max-width: 1472px; //$screenXXLarge - 64px * 2
+  }
+}
+
+.hide {
+  display: none;
+}
