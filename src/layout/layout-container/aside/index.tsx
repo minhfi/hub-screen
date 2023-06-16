@@ -47,10 +47,7 @@ const Aside: FC = () => {
     }
   ]
 
-  const handleRedirect = (path: string) => {
-    console.log(path)
-    return history.push(path)
-  }
+  const handleRedirect = (path: string) => path && history.push(path)
 
   return (
     <Sidebar width="300px" collapsed={collapsed}>
