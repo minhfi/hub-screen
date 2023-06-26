@@ -8,6 +8,7 @@ import { Input } from 'src/components/input'
 import { ENotify } from 'src/constants/enum'
 import { formDataSchema } from './schema'
 import { notify } from 'src/utils/notify.util'
+import { useHistory } from 'react-router'
 
 interface IFormData {
   name: string
@@ -17,6 +18,7 @@ interface IFormData {
 const DesignSystem: FC = () => {
   const theme = useTheme()
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const { errors, validate } = useValidation<IFormData>()
 
@@ -79,7 +81,7 @@ const DesignSystem: FC = () => {
         <Typography variant="h5">Button</Typography>
         <Box display="flex" alignItems="center" gap={3} mb={2} mt={2}>
           <Button onClick={handleNotify}>Button primary</Button>
-          <Button order="secondary">Button secondary</Button>
+          <Button order="secondary" onClick={() => history.push('/')}>Button secondary</Button>
           <Button disabled>Button disabled</Button>
           <Button
             width={300}
