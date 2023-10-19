@@ -1,44 +1,30 @@
 import { FC } from 'react'
 import { useSelector } from 'react-redux'
-import { makeStyles } from '@mui/styles'
 import { ToastContainer } from 'react-toastify'
-import { IThemeProps, TTheme, toCssVariables } from 'src/constants/mui-theme'
-import { getLayoutIsLoading, getModal, getThemeMode } from 'src/store/selectors'
+import { getModal } from 'src/store/selectors'
 import { Loading } from 'src/components/loading'
 import { Modal } from 'src/components/modal'
 
-import { STContainer, STContent } from './styled'
 import { RouterView } from './router-view'
-
-const createThemeVariables = makeStyles<TTheme>(
-  theme => ({
-    '@global': {
-      ':root': ({ paletteMode }: IThemeProps) => toCssVariables(paletteMode)
-    }
-  })
-)
+import { Drawer } from 'src/components/drawer'
 
 export const AppLayout: FC = () => {
-  const paletteMode = useSelector(getThemeMode)
-  const isLoading = useSelector(getLayoutIsLoading)
   const appModal = useSelector(getModal)
 
-  createThemeVariables({ paletteMode })
-
   return (
-    <STContainer isLoading={isLoading}>
-      <STContent>
+    <section className="layout">
+      <main className="layout-main">
         <RouterView/>
-      </STContent>
+      </main>
 
       {appModal.open && <Modal/>}
-
       <Loading/>
+      <Drawer/>
 
       <ToastContainer
         autoClose={5000}
         hideProgressBar
       />
-    </STContainer>
+    </section>
   )
 }

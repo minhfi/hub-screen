@@ -1,20 +1,42 @@
-import { FC } from 'react'
-import { useDispatch } from 'react-redux'
-import { Typography } from '@mui/material'
-import { Button } from 'src/components/button'
-import { AUTH_LOGOUT } from 'src/store/types'
-import { STHeader } from './styled'
+import { FC, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
+import { getIsAuthenticated, getProfile } from 'src/store/selectors'
+import logo from 'src/assets/images/logo.svg'
+import { Image } from 'src/components/image'
+import { ERole } from 'src/constants/enum'
+import HeaderAffiliate from './affiliate'
+import HeaderAdmin from './admin'
+import './style.scss'
 
-const Header:FC = () => {
-  const dispatch = useDispatch()
+const Header: FC = () => {
+  const history = useHistory()
+  const user = useSelector(getProfile)
+  const isAuthenticated = useSelector(getIsAuthenticated)
 
-  const handleLogout = () => dispatch({ type: AUTH_LOGOUT })
+  // check role to render header
+  const HEADER = useMemo(() => {
+    switch (user?.role.code) {
+      case ERole.AFFILIATE:
+        return <HeaderAffiliate/>
+
+      default:
+        return <HeaderAdmin/>
+    }
+  }, [user?.role])
 
   return (
-    <STHeader>
-      <Typography variant="h5">Page title</Typography>
-      <Button order="secondary" onClick={handleLogout}>Logout</Button>
-    </STHeader>
+    <section className="header">
+      {isAuthenticated
+        ? (
+            HEADER
+          )
+        : (
+          <div onClick={() => history.push('/')} className="cursor-pointer">
+            <Image src={logo} size={50} alt="logo"/>
+          </div>
+          )}
+    </section>
   )
 }
 

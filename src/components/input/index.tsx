@@ -1,68 +1,89 @@
-import { FC, useCallback, useState, HTMLInputTypeAttribute } from 'react'
-import { Box, IconButton, InputAdornment, SxProps, TextFieldProps, Typography, useTheme } from '@mui/material'
+import { FC, HTMLInputTypeAttribute, ReactElement } from 'react'
+import { Input as InputBasic } from 'antd'
+import { InputProps } from 'antd/lib/input'
+import { Colors } from 'src/constants/theme'
+import { omit } from 'lodash'
+import './style.scss'
+import { Popover } from '../popover'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
-import { TextField, TextInput } from './styled'
-import { IconVisibility, IconVisibilityOff } from 'src/assets/icons'
-
-export interface InputBaseProps {
+export interface IInputProps extends InputProps {
   type?: HTMLInputTypeAttribute
   name?: string
   label?: string
   required?: boolean
   error?: string
-  mb?: number
-  sx?: SxProps
+  note?: string
+  mb?: string | number
+  width?: string | number
+  popoverContent?: string | ReactElement
+  handleEnter?: () => void
 }
 
-export type InputProps = InputBaseProps & Omit<TextFieldProps, 'error'>
+export const Input: FC<IInputProps> = ({
+  label,
+  note,
+  error,
+  mb,
+  required,
+  popoverContent,
+  ...props
+}) => {
+  const InputField =
+    props.type === 'password' ? InputBasic.Password : InputBasic
 
-export const Input: FC<InputProps> = ({ label, error, mb, required, ...props }) => {
-  const theme = useTheme()
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const toggleShowPassword = useCallback(() => setShowPassword(!showPassword), [showPassword])
-
-  const type = props.type === 'password' && !showPassword ? 'password' : 'text'
-  const InputProps = props.type === 'password'
-    ? {
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="Toggle password visibility"
-              onClick={toggleShowPassword}
-              onMouseDown={toggleShowPassword}
-            >
-              {showPassword ? <IconVisibility/> : <IconVisibilityOff/>}
-            </IconButton>
-          </InputAdornment>
-        )
-      }
-    : props.InputProps
+  const handleEnter = (event: any) => {
+    if (event.key === 'Enter') {
+      props.handleEnter && props.handleEnter()
+    }
+  }
 
   return (
-    <TextInput mb={mb} sx={props.sx}>
+    <div className="input" style={{ marginBottom: mb }}>
       {label && (
-        <Typography variant="body1" sx={{ marginBottom: '8px' }}>
-          {label} {required && <Typography component="span" variant="body2" color={theme.colors['--color-red-600']}>*</Typography>}
-        </Typography>
+        <div className="fx fx-ai-center gap-4 body-2 f-medium mb-8">
+          <div style={{ color: Colors.gray900 }}>{label}</div>
+          {required && <div style={{ color: Colors.red }}>*</div>}
+          {popoverContent && (
+            <Popover content={popoverContent}>
+              <InfoCircleOutlined
+                style={{ color: Colors.gray550 }}
+                className="cursor-help"
+              />
+            </Popover>
+          )}
+        </div>
       )}
 
-      <TextField
-        {...props}
-        type={type}
-        error={!!error}
-        InputProps={InputProps}
+      <InputField
+        {...omit(props, 'handleEnter')}
+        type={props.type}
+        onKeyDown={handleEnter}
+        status={error ? 'error' : ''}
+        style={{ width: props.width }}
       />
 
       {error && (
-        <Box mt={1}>
-          <Typography variant="body2" color={theme.colors['--color-red-600']}>{error}</Typography>
-        </Box>
+        <div style={{ marginTop: '8px' }}>
+          <div className="body-2" style={{ color: Colors.red }}>
+            {error}
+          </div>
+        </div>
       )}
-    </TextInput>
+
+      {note && (
+        <div style={{ marginTop: '6px' }}>
+          <div className="meta" style={{ color: Colors.gray600 }}>
+            {note}
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
 Input.defaultProps = {
   type: 'text',
-  mb: 2
+  mb: '16px',
+  placeholder: ''
 }

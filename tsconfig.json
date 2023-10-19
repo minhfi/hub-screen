@@ -19,7 +19,10 @@
     "typeRoots": [
       "node_modules/@types",
       "types"
-    ]
+    ],
+    "paths": {
+      "react": [ "./node_modules/@types/react" ]
+    }
   },
   "include": [
     "vite.config.ts",
@@ -27,7 +30,7 @@
     "types",
     "src",
     "tsconfig.jest.json",
-    "jest.config.js"
+    "jest.config.js",
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

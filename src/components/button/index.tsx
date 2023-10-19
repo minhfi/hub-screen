@@ -1,47 +1,33 @@
-import { FC, useMemo } from 'react'
-import { ButtonProps } from '@mui/material'
-import { ButtonPrimary, ButtonSecondary } from './styled'
+import { FC, ReactNode } from 'react'
+import { Button as ButtonBasic } from 'antd'
+import { omit } from 'lodash'
+import { BaseButtonProps } from 'antd/lib/button/button'
+import './style.scss'
 
-export interface IButtonProps extends ButtonProps {
-  order?: 'primary' | 'secondary'
-  width?: number
-  height?: number
-  background?: string
-  colorText?: string
+export interface IButtonProps extends BaseButtonProps {
+  colors?: string
+  icon?: ReactNode
+  endIcon?: ReactNode
+  type?: 'primary' | 'default' | 'text'
+  onClick?: () => void
 }
 
-export const Button: FC<IButtonProps & ButtonProps<'span', { component?: 'span' }>> = ({ width, height, order, colorText, ...props }) => {
-  const VIEW = useMemo(() => {
-    switch (order) {
-      case 'secondary':
-        return (
-          <ButtonSecondary
-            width={width}
-            height={height}
-            colorText={colorText}
-            {...props}
-          >
-            {props.children}
-          </ButtonSecondary>
-        )
-      default:
-        return (
-          <ButtonPrimary
-            width={width}
-            height={height}
-            colorText={colorText}
-            {...props}
-          >
-            {props.children}
-          </ButtonPrimary>
-        )
-    }
-  }, [width, height, order, props])
-
-  return VIEW
+export const Button: FC<IButtonProps> = (props) => {
+  return (
+    <ButtonBasic
+      {...omit(props, 'endIcon')}
+      type={props.type}
+      className={`button body-2 ${props.className ? props.className : ''}`}
+      style={{ color: props.colors }}
+    >
+      <div>
+        {props.children}
+        {props.endIcon ? <span className="ml-8">{props.endIcon}</span> : ''}
+      </div>
+    </ButtonBasic>
+  )
 }
 
 Button.defaultProps = {
-  order: 'primary',
-  height: 40
+  type: 'primary'
 }
