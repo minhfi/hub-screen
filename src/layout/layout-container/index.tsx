@@ -5,7 +5,7 @@ import { Layout } from 'antd'
 import {
   getIsAuthenticated,
   getLayoutIsAside,
-  getLayoutIsHeader,
+  // getLayoutIsHeader,
   getNavigateTo
 } from 'src/store/selectors'
 import {
@@ -14,7 +14,7 @@ import {
 } from 'src/store/actions'
 import { AUTH_GET_PROFILE } from 'src/store/types'
 // import { Footer } from './footer'
-import Header from './header'
+// import Header from './header'
 import Aside from './aside'
 import './style.scss'
 import { FlashScreen } from 'src/components/flash-screen'
@@ -25,7 +25,7 @@ export const LayoutContainer: FC = (props) => {
   const navigateTo = useSelector(getNavigateTo)
   const isAside = useSelector(getLayoutIsAside)
   const isAuthenticated = useSelector(getIsAuthenticated)
-  const isHeader = useSelector(getLayoutIsHeader)
+  // const isHeader = useSelector(getLayoutIsHeader)
 
   // load profile
   useEffect(() => {
@@ -51,7 +51,7 @@ export const LayoutContainer: FC = (props) => {
       {isAside && <Aside/>}
 
       <div className="layout-content">
-        {isHeader && <Header/>}
+        {/* {isHeader && <Header/>} */}
         <Layout.Content className="layout-content__child">
           <Suspense fallback={<FlashScreen/>}>{props.children}</Suspense>
           {/* <Footer/> */}

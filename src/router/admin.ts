@@ -1,13 +1,14 @@
 import { lazy } from 'react'
 import { IRouterOption } from 'src/interfaces'
+import { Home } from 'src/modules/home'
 
 // auth
-const SignIn = lazy(() => {
-  return Promise.all([
-    import('src/modules/auth'),
-    new Promise((resolve) => setTimeout(resolve, 300))
-  ]).then(([module]) => ({ default: module.SignIn }))
-})
+// const SignIn = lazy(() => {
+//   return Promise.all([
+//     import('src/modules/auth'),
+//     new Promise((resolve) => setTimeout(resolve, 300))
+//   ]).then(([module]) => ({ default: module.SignIn }))
+// })
 
 const SignUp = lazy(() => {
   return Promise.all([
@@ -77,9 +78,9 @@ const Dashboard = lazy(() => {
 export const routesAdmin: IRouterOption[] = [
   // auth
   {
-    path: '/:type(sign-in)?',
+    path: '/:type(home)?',
     exact: true,
-    component: SignIn,
+    component: Home,
     isRequired: false
   },
 

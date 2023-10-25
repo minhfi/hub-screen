@@ -19,7 +19,7 @@
         padding: 24px;
         height: 100%;
         overflow: auto;
-        background-color: var(--background);
+        background: var(--background);
         @include font-size(1rem);
     }
 }
