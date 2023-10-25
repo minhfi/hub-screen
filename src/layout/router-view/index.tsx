@@ -1,14 +1,12 @@
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
-import { getIsAuthenticated, getProfile } from 'src/store/selectors'
+import { getIsAuthenticated } from 'src/store/selectors'
 import { StorageUtil } from 'src/utils/storage.util'
 import { AUTH_FALLBACK_KEY } from 'src/constants'
 import { IRouterOption } from 'src/interfaces'
 import { routesAdmin } from 'src/router/admin'
-import { routesAffiliate } from 'src/router/affiliate'
 import { LayoutContainer } from '../layout-container'
-import { ERole } from 'src/constants/enum'
 
 const PrivateRoute: FC<IRouterOption> = (props) => {
   const location = useLocation()
@@ -44,23 +42,10 @@ const PublicRoute: FC<IRouterOption> = (props) => {
 }
 
 export const RouterView: FC = () => {
-  const user = useSelector(getProfile)
-
-  // check role to render routes
-  const ROUTES = useMemo(() => {
-    switch (user?.role.code) {
-      case ERole.AFFILIATE:
-        return routesAffiliate
-
-      default:
-        return routesAdmin
-    }
-  }, [user?.role])
-
   return (
     <LayoutContainer>
       <Switch>
-        {ROUTES.map((item) => {
+        {routesAdmin.map((item) => {
           if (item.isRequired) {
             return <PrivateRoute key={item.path} {...item}/>
           }

@@ -1,5 +1,5 @@
-import { Colors } from 'src/constants/theme'
-import './style.scss'
+import { useMemo } from 'react'
+import { useParams } from 'react-router'
 import {
   IconArrowRight,
   IconFlagID,
@@ -8,12 +8,17 @@ import {
   IconFlagTH,
   IconFlagVN
 } from 'src/assets/icons'
+import { Colors } from 'src/constants/theme'
 import LogoVN2 from 'src/assets/images/logo-vn2.jpg'
 import LogoVN3 from 'src/assets/images/logo-vn3.jpg'
 import LogoEkiwi from 'src/assets/images/logo-ekiwi.png'
 import LogoEforte from 'src/assets/images/logo-enforte.png'
+import LogoNTl from 'src/assets/images/logo-ntl.jpg'
+import './style.scss'
 
 export const Home = () => {
+  const { geo } = useParams<{ geo: string }>()
+
   const organizations = [
     {
       name: 'Nutralife',
@@ -32,7 +37,7 @@ export const Home = () => {
       },
       sm: {
         title: 'System Management',
-        link: ''
+        link: 'https://vnultraf-smgr.tmsapp.net/account/login'
       }
     },
     {
@@ -56,6 +61,26 @@ export const Home = () => {
       }
     },
     {
+      name: 'LoveHealth',
+      type: 'resell',
+      geo: 'vn4',
+      country: 'vn',
+      logo: LogoVN3,
+      logoCountry: <IconFlagVN/>,
+      tms: {
+        title: 'TMS',
+        link: 'https://vnlovehealth.tmsapp.net/auth/login'
+      },
+      rescue: {
+        title: 'Rescue Management',
+        link: 'https://vnlh-rescue.tmsapp.net/login'
+      },
+      sm: {
+        title: 'System Management',
+        link: 'https://vnlh-smgr.tmsapp.net/account/login'
+      }
+    },
+    {
       name: 'Enforte',
       type: 'resell',
       geo: 'th1',
@@ -72,7 +97,7 @@ export const Home = () => {
       },
       sm: {
         title: 'System Management',
-        link: ''
+        link: 'https://smgr-th.tmsapp.net/account/login'
       }
     },
     {
@@ -80,7 +105,7 @@ export const Home = () => {
       type: 'fresh',
       geo: 'th2',
       country: 'th',
-      logo: LogoEforte,
+      logo: LogoNTl,
       logoCountry: <IconFlagTH/>,
       tms: {
         title: 'TMS',
@@ -124,15 +149,15 @@ export const Home = () => {
       logoCountry: <IconFlagID/>,
       tms: {
         title: 'TMS',
-        link: ''
+        link: 'https://idgms.tmsapp.net/auth/login'
       },
       rescue: {
         title: 'Rescue Management',
-        link: ''
+        link: 'https://idgms-rescue.tmsapp.net/login'
       },
       sm: {
         title: 'System Management',
-        link: ''
+        link: 'https://idgms-smgr.tmsapp.net/account/login'
       }
     },
     {
@@ -148,11 +173,11 @@ export const Home = () => {
       },
       rescue: {
         title: 'Rescue Management',
-        link: ''
+        link: 'https://rescue-my.tmsapp.net/login'
       },
       sm: {
         title: 'System Management',
-        link: ''
+        link: 'https://smgr-my.tmsapp.net/account/login'
       }
     },
     {
@@ -179,12 +204,29 @@ export const Home = () => {
 
   const handleRedirect = (url: string) => window.open(url)
 
+  const LIST = useMemo(() => {
+    const organization = organizations.filter((item) => item.geo === geo)
+
+    if (organization?.length) {
+      return organization
+    }
+
+    return organizations
+  }, [organizations, geo])
+
   return (
     <div className="section">
-      <div className="home">
-        <div className="heading-3" style={{ color: Colors.white }}>HUB SCREEN</div>
-        <div className="home-card">
-          {organizations.map((item, index) => (
+      <div
+        className="home"
+        style={{
+          height: geo ? 'calc(100vh - 48px)' : '100%'
+        }}
+      >
+        <div className="heading-3" style={{ color: Colors.white }}>
+          HUB SCREEN
+        </div>
+        <div className={`home-card ${geo ? 'fx-jc-center mt-40' : ''}`}>
+          {LIST.map((item, index) => (
             <div className="home-card__item" key={index}>
               <div className="heading-6 home-card__item--header">
                 <div>
@@ -204,7 +246,7 @@ export const Home = () => {
                     className="fx fx-ai-center gap-8 cursor-pointer"
                     onClick={() => handleRedirect(item.tms.link)}
                   >
-                    <div className="meta">Go to Project</div>
+                    <div className="meta">Go to Portal</div>
                     <IconArrowRight/>
                   </div>
                 </div>
@@ -216,7 +258,7 @@ export const Home = () => {
                     className="fx fx-ai-center gap-8 cursor-pointer"
                     onClick={() => handleRedirect(item.rescue.link)}
                   >
-                    <div className="meta">Go to Project</div>
+                    <div className="meta">Go to Portal</div>
                     <IconArrowRight/>
                   </div>
                 </div>
@@ -228,7 +270,7 @@ export const Home = () => {
                     className="fx fx-ai-center gap-8 cursor-pointer"
                     onClick={() => handleRedirect(item.sm.link)}
                   >
-                    <div className="meta">Go to Project</div>
+                    <div className="meta">Go to Portal</div>
                     <IconArrowRight/>
                   </div>
                 </div>

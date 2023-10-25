@@ -78,7 +78,7 @@ const Dashboard = lazy(() => {
 export const routesAdmin: IRouterOption[] = [
   // auth
   {
-    path: '/:type(home)?',
+    path: '/:geo(vn2|vn3|vn4|th1|th2|id1|id2|my1|ph1)?',
     exact: true,
     component: Home,
     isRequired: false

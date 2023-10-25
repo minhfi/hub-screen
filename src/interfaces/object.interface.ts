@@ -22,3 +22,8 @@ export interface IOption extends IObject {
   disabled?: boolean
   checked?: boolean
 }
+
+export interface IGroupField {
+  title: string
+  options: IOption[]
+}
