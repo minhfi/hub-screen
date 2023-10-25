@@ -14,6 +14,7 @@ import LogoVN3 from 'src/assets/images/logo-vn3.jpg'
 import LogoEkiwi from 'src/assets/images/logo-ekiwi.png'
 import LogoEforte from 'src/assets/images/logo-enforte.png'
 import LogoNTl from 'src/assets/images/logo-ntl.jpg'
+import LogoLoveHealth from 'src/assets/images/logo-lovehealth.png'
 import './style.scss'
 
 export const Home = () => {
@@ -65,7 +66,7 @@ export const Home = () => {
       type: 'resell',
       geo: 'vn4',
       country: 'vn',
-      logo: LogoVN3,
+      logo: LogoLoveHealth,
       logoCountry: <IconFlagVN/>,
       tms: {
         title: 'TMS',
